@@ -74,3 +74,95 @@ Traceback (most recent call last):
   File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
     from routes import register_routes  # ← インポート
 ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
+Traceback (most recent call last):
+  File "/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py", line 3, in <module>
+    from routes import register_routes  # ← インポート
+ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py)
