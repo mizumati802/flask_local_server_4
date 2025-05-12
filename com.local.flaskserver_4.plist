@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.local.flaskserver_4</string>  <!-- ここを変更 -->
+    <key>WorkingDirectory</key>
+    <string>/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/run_flask.sh</string>
+    </array>
+    <key>StandardOutPath</key>
+    <string>/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/logs/flask_out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/logs/flask_err.log</string>
+    <key>KeepAlive</key>
+    <true/>
+    <key>RunAtLoad</key>
+    <true/>
+  </dict>
+</plist>

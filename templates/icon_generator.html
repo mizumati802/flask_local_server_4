@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>アイコンジェネレータ</title>
+    <!-- Iconify APIを追加 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iconify/3.1.0/iconify.min.js"></script>
+    <style>
+      body {
+        font-family: "Segoe UI", "Meiryo UI", sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      .editor {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+      .canvas-container {
+        position: relative;
+        width: 256px;
+        height: 256px;
+      }
+      #icon-canvas {
+        border: 1px solid #ccc;
+        display: block;
+        width: 256px;
+        height: 256px;
+      }
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        min-width: 300px;
+      }
+      .control-group {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .control-group h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      input[type="color"] {
+        width: 100%;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      #emoji-selector {
+        font-size: 16px;
+        padding: 8px;
+        width: 100%;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .preview-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .preview-sizes {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+      }
+      .preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+      }
+      #drop-zone {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        margin-top: 10px;
+        color: #666;
+      }
+      #drop-zone.active {
+        border-color: #4caf50;
+        background-color: rgba(76, 175, 80, 0.1);
+      }
+      .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 5px;
+        margin-top: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .icon-item {
+        font-size: 24px;
+        padding: 5px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+      }
+      .icon-item:hover {
+        background-color: #f0f0f0;
+      }
+      .history {
+        margin-top: 20px;
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+      }
+      .history h3 {
+        margin-top: 0;
+      }
+      .history-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .history-item {
+        width: 64px;
+        height: 64px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .input-group {
+        margin-bottom: 10px;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .fill-options {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .fill-option {
+        flex: 1;
+      }
+      .fill-color-picker {
+        width: 100%;
+        margin-top: 5px;
+      }
+      .color-threshold-slider {
+        width: 100%;
+        margin-top: 10px;
+      }
+      .format-info {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+        font-style: italic;
+      }
+      .icon-search-input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .icon-set-selector {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .icon-color-picker {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .option-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .status-message {
+        font-size: 12px;
+        font-style: italic;
+        margin-top: 5px;
+        color: #666;
+      }
+      .save-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .alert-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+      }
+      .alert-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px;
+        text-align: center;
+      }
+      .alert-content h3 {
+        margin-top: 0;
+      }
+      .alert-content button {
+        margin-top: 15px;
+      }
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #4caf50;
+        animation: spin 1s ease-in-out infinite;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .directory-status {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 8px;
+      }
+      /* テキスト入力用のスタイル */
+      .text-input-group {
+        margin-bottom: 10px;
+      }
+      .text-input-group input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+      }
+      .text-settings {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+      .text-setting {
+        flex: 1;
+        min-width: 120px;
+      }
+      #text-font {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>アイコンジェネレータ</h1>
+
+      <div class="editor">
+        <div class="canvas-container">
+          <canvas id="icon-canvas" width="256" height="256"></canvas>
+        </div>
+
+        <div class="controls">
+          <div class="control-group">
+            <h3>背景色</h3>
+            <input type="color" id="background-color" value="#4CAF50" />
+          </div>
+
+          <div class="control-group">
+            <h3>テキスト追加</h3>
+            <div class="text-input-group">
+              <input
+                type="text"
+                id="text-input"
+                placeholder="1～2文字を入力"
+                maxlength="2"
+              />
+            </div>
+            <div class="text-settings">
+              <div class="text-setting">
+                <label>フォント:</label>
+                <select id="text-font">
+                  <option value="Arial">Arial</option>
+                  <option value="'Segoe UI'">Segoe UI</option>
+                  <option value="'Meiryo UI'" selected>Meiryo UI</option>
+                  <option value="sans-serif">Sans-serif</option>
+                  <option value="serif">Serif</option>
+                  <option value="monospace">Monospace</option>
+                  <option value="fantasy">Fantasy</option>
+                  <option value="cursive">Cursive</option>
+                </select>
+              </div>
+              <div class="text-setting">
+                <label>テキスト色:</label>
+                <input type="color" id="text-color" value="#FFFFFF" />
+              </div>
+            </div>
+            <button id="apply-text">テキスト適用</button>
+            <div id="text-status" class="status-message"></div>
+          </div>
+
+          <div class="control-group">
+            <h3>画像をドロップ</h3>
+            <div id="drop-zone">ここにPNG画像をドラッグ＆ドロップ</div>
+
+            <!-- 塗りつぶし機能 -->
+            <div class="fill-options">
+              <div class="fill-option">
+                <label>
+                  <input type="checkbox" id="fill-white" />
+                  白塗りつぶし
+                </label>
+                <input
+                  type="color"
+                  id="white-fill-color"
+                  class="fill-color-picker"
+                  value="#ffffff"
+                />
+                <input
+                  type="range"
+                  id="white-threshold"
+                  class="color-threshold-slider"
+                  min="0"
+                  max="255"
+                  value="240"
+                />
+              </div>
+              <div class="fill-option">
+                <label>
+                  <input type="checkbox" id="fill-black" />
+                  黒塗りつぶし
+                </label>
+                <input
+                  type="color"
+                  id="black-fill-color"
+                  class="fill-color-picker"
+                  value="#000000"
+                />
+                <input
+                  type="range"
+                  id="black-threshold"
+                  class="color-threshold-slider"
+                  min="0"
+                  max="255"
+                  value="30"
+                />
+              </div>
+            </div>
+            <button id="apply-fill" style="margin-top: 10px">
+              塗りつぶし適用
+            </button>
+            <div id="fill-status" class="status-message"></div>
+          </div>
+
+          <div class="control-group">
+            <h3>アイコンを追加</h3>
+            <!-- アイコン検索と選択 -->
+            <select id="icon-set-selector" class="icon-set-selector">
+              <option value="mdi">Material Design Icons</option>
+              <option value="fa">Font Awesome</option>
+              <option value="bi">Bootstrap Icons</option>
+              <option value="clarity">Clarity Icons</option>
+              <option value="tabler">Tabler Icons</option>
+            </select>
+            <input
+              type="text"
+              id="icon-search"
+              class="icon-search-input"
+              placeholder="アイコンを検索..."
+            />
+            <div class="option-row">
+              <label>アイコン色:</label>
+              <input
+                type="color"
+                id="icon-color"
+                class="icon-color-picker"
+                value="#000000"
+                style="width: 50px"
+              />
+            </div>
+            <div class="icon-grid" id="icon-grid">
+              <!-- アイコンがJSで生成されます -->
+            </div>
+            <div id="icon-status" class="status-message"></div>
+          </div>
+
+          <div class="control-group">
+            <h3>アイコンサイズ</h3>
+            <div class="input-group">
+              <label for="icon-size">サイズを選択:</label>
+              <select id="icon-size">
+                <option value="256">256x256</option>
+                <option value="512">512x512</option>
+                <option value="1024" selected>1024x1024</option>
+              </select>
+              <div class="format-info">※ アイコンは.png形式で保存されます</div>
+              <div class="format-info">※ 保存先: img_data/</div>
+            </div>
+          </div>
+
+          <div class="save-buttons">
+            <button id="save-button">保存</button>
+            <button id="reset-button">リセット</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-container">
+        <h3>プレビュー</h3>
+        <div class="preview-sizes">
+          <div class="preview">
+            <canvas id="preview-16" width="16" height="16"></canvas>
+            <span>16x16</span>
+          </div>
+          <div class="preview">
+            <canvas id="preview-32" width="32" height="32"></canvas>
+            <span>32x32</span>
+          </div>
+          <div class="preview">
+            <canvas id="preview-48" width="48" height="48"></canvas>
+            <span>48x48</span>
+          </div>
+          <div class="preview">
+            <canvas id="preview-64" width="64" height="64"></canvas>
+            <span>64x64</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="history">
+        <h3>履歴</h3>
+        <div class="history-items" id="history-container">
+          <!-- 履歴アイテムがJSで生成されます -->
+        </div>
+      </div>
+    </div>
+
+    <!-- アラートモーダル -->
+    <div class="alert-modal" id="alert-modal">
+      <div class="alert-content">
+        <h3 id="alert-title">メッセージ</h3>
+        <p id="alert-message"></p>
+        <button id="alert-close">閉じる</button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Canvas要素とコンテキストの取得
+        const canvas = document.getElementById("icon-canvas");
+        const ctx = canvas.getContext("2d");
+        const bgColorPicker = document.getElementById("background-color");
+        const dropZone = document.getElementById("drop-zone");
+        const resetButton = document.getElementById("reset-button");
+        const saveButton = document.getElementById("save-button");
+        const iconSizeSelect = document.getElementById("icon-size");
+        const historyContainer = document.getElementById("history-container");
+
+        // テキスト関連の要素
+        const textInput = document.getElementById("text-input");
+        const textFont = document.getElementById("text-font");
+        const textColorPicker = document.getElementById("text-color");
+        const applyTextButton = document.getElementById("apply-text");
+        const textStatus = document.getElementById("text-status");
+
+        // アラートモーダル
+        const alertModal = document.getElementById("alert-modal");
+        const alertTitle = document.getElementById("alert-title");
+        const alertMessage = document.getElementById("alert-message");
+        const alertClose = document.getElementById("alert-close");
+
+        // アイコン関連の要素
+        const iconGrid = document.getElementById("icon-grid");
+        const iconSetSelector = document.getElementById("icon-set-selector");
+        const iconSearch = document.getElementById("icon-search");
+        const iconColorPicker = document.getElementById("icon-color");
+        const iconStatus = document.getElementById("icon-status");
+
+        // 塗りつぶし機能の要素
+        const fillWhiteCheckbox = document.getElementById("fill-white");
+        const fillBlackCheckbox = document.getElementById("fill-black");
+        const whiteFillColorPicker =
+          document.getElementById("white-fill-color");
+        const blackFillColorPicker =
+          document.getElementById("black-fill-color");
+        const whiteThresholdSlider = document.getElementById("white-threshold");
+        const blackThresholdSlider = document.getElementById("black-threshold");
+        const applyFillButton = document.getElementById("apply-fill");
+        const fillStatus = document.getElementById("fill-status");
+
+        // プレビューCanvas
+        const preview16 = document
+          .getElementById("preview-16")
+          .getContext("2d");
+        const preview32 = document
+          .getElementById("preview-32")
+          .getContext("2d");
+        const preview48 = document
+          .getElementById("preview-48")
+          .getContext("2d");
+        const preview64 = document
+          .getElementById("preview-64")
+          .getContext("2d");
+
+        // アラートモーダル関数
+        function showAlert(title, message) {
+          alertTitle.textContent = title;
+          alertMessage.textContent = message;
+          alertModal.style.display = "flex";
+        }
+
+        // アラートを閉じる
+        alertClose.addEventListener("click", function () {
+          alertModal.style.display = "none";
+        });
+
+        // 拡張アイコンセット
+        const iconSets = {
+          // Material Design Icons (MDI)
+          mdi: [
+            // 基本アイコン
+            "home",
+            "account",
+            "cog",
+            "heart",
+            "star",
+            "check",
+            "close",
+            "plus",
+            "minus",
+            "magnify",
+            "pencil",
+            "delete",
+            "alert",
+            "information",
+            "help",
+            "refresh",
+            "sync",
+            "download",
+            "upload",
+            "email",
+            "phone",
+            "message",
+            "calendar",
+            "clock",
+
+            // ナビゲーション
+            "menu",
+            "arrow-left",
+            "arrow-right",
+            "arrow-up",
+            "arrow-down",
+            "chevron-left",
+            "chevron-right",
+            "chevron-up",
+            "chevron-down",
+            "page-first",
+            "page-last",
+            "menu-down",
+            "menu-up",
+
+            // アクション
+            "play",
+            "pause",
+            "stop",
+            "skip-next",
+            "skip-previous",
+            "fast-forward",
+            "rewind",
+            "fullscreen",
+            "fullscreen-exit",
+
+            // コミュニケーション
+            "chat",
+            "comment",
+            "forum",
+            "email-outline",
+            "phone-outline",
+            "video",
+            "video-off",
+            "microphone",
+            "microphone-off",
+
+            // コンテンツ編集
+            "format-bold",
+            "format-italic",
+            "format-underline",
+            "format-list-bulleted",
+            "format-list-numbered",
+            "format-align-left",
+            "format-align-center",
+            "format-align-right",
+
+            // ファイル関連
+            "file",
+            "file-outline",
+            "file-document",
+            "file-pdf",
+            "file-excel",
+            "file-word",
+            "folder",
+            "folder-open",
+            "folder-outline",
+            "attachment",
+
+            // デバイス
+            "cellphone",
+            "tablet",
+            "laptop",
+            "desktop-classic",
+            "printer",
+            "camera",
+            "wifi",
+            "bluetooth",
+            "cast",
+            "battery",
+
+            // 社会的
+            "facebook",
+            "twitter",
+            "instagram",
+            "linkedin",
+            "github",
+            "google",
+            "youtube",
+            "pinterest",
+            "reddit",
+            "whatsapp",
+
+            // 通知
+            "bell",
+            "bell-outline",
+            "bell-off",
+            "bell-ring",
+            "vibrate",
+
+            // ショッピング
+            "cart",
+            "cart-outline",
+            "cart-plus",
+            "cash",
+            "credit-card",
+            "gift",
+            "tag",
+            "ticket",
+            "store",
+            "shopping",
+
+            // 天気
+            "weather-sunny",
+            "weather-cloudy",
+            "weather-rainy",
+            "weather-snowy",
+            "weather-lightning",
+            "weather-windy",
+            "thermometer",
+            "umbrella",
+
+            // アプリケーション
+            "apps",
+            "application",
+            "application-outline",
+            "application-cog",
+            "application-edit",
+            "application-export",
+            "application-import",
+            "application-settings",
+            "package",
+            "package-variant",
+            "palette",
+            "palette-outline",
+            "brush",
+            "brush-outline",
+            "draw",
+            "draw-pen",
+            "tools",
+            "toolbox",
+            "toolbox-outline",
+            "wrench",
+            "wrench-outline",
+
+            // PC関連
+            "desktop",
+            "desktop-mac",
+            "desktop-tower",
+            "desktop-tower-monitor",
+            "server",
+            "server-network",
+            "lan",
+            "lan-connect",
+            "lan-disconnect",
+            "lan-pending",
+            "mouse",
+            "mouse-bluetooth",
+            "keyboard",
+            "keyboard-outline",
+            "monitor",
+            "monitor-screenshot",
+            "monitor-lock",
+            "printer-3d",
+            "printer-3d-nozzle",
+            "memory",
+            "chip",
+            "harddisk",
+            "sd",
+            "usb",
+            "usb-port",
+
+            // メモ関連
+            "note",
+            "note-outline",
+            "note-plus",
+            "note-plus-outline",
+            "note-text",
+            "note-text-outline",
+            "notebook",
+            "notebook-outline",
+            "text-box",
+            "text-box-outline",
+            "text-box-plus",
+            "text-box-plus-outline",
+            "text-box-check",
+            "text-box-check-outline",
+            "clipboard",
+            "clipboard-outline",
+            "clipboard-text",
+            "clipboard-text-outline",
+
+            // 画像系
+            "image",
+            "image-outline",
+            "image-plus",
+            "image-edit",
+            "image-filter",
+            "image-move",
+            "image-size-select-actual",
+            "image-size-select-large",
+            "image-multiple",
+            "image-multiple-outline",
+            "image-off",
+            "image-off-outline",
+            "picture",
+            "picture-in-picture-top-right",
+            "movie",
+            "movie-outline",
+            "panorama",
+            "panorama-outline",
+            "panorama-wide-angle",
+            "panorama-horizontal",
+            "camera-plus",
+            "camera-plus-outline",
+            "camera-wireless",
+            "camera-wireless-outline",
+            "vector-square",
+            "vector-circle",
+            "vector-polygon",
+            "vector-triangle",
+          ],
+
+          // Font Awesome (FA)
+          fa: [
+            // 基本アイコン
+            "house",
+            "user",
+            "gear",
+            "heart",
+            "star",
+            "check",
+            "xmark",
+            "plus",
+            "minus",
+            "magnifying-glass",
+            "pen",
+            "trash",
+            "triangle-exclamation",
+            "circle-info",
+            "circle-question",
+            "arrows-rotate",
+            "rotate",
+            "download",
+            "upload",
+            "envelope",
+            "phone",
+            "comment",
+            "calendar",
+            "clock",
+
+            // ナビゲーション
+            "bars",
+            "arrow-left",
+            "arrow-right",
+            "arrow-up",
+            "arrow-down",
+            "chevron-left",
+            "chevron-right",
+            "chevron-up",
+            "chevron-down",
+            "caret-left",
+            "caret-right",
+            "caret-up",
+            "caret-down",
+
+            // メディア
+            "play",
+            "pause",
+            "stop",
+            "forward-step",
+            "backward-step",
+            "forward-fast",
+            "backward-fast",
+            "expand",
+            "compress",
+
+            // ファイル
+            "file",
+            "file-lines",
+            "file-pdf",
+            "file-excel",
+            "file-word",
+            "folder",
+            "folder-open",
+            "paper-clip",
+            "copy",
+            "paste",
+
+            // テーブル・リスト
+            "table",
+            "list",
+            "list-ul",
+            "list-ol",
+            "sort",
+            "filter",
+
+            // コミュニケーション
+            "comment",
+            "comments",
+            "envelope",
+            "envelope-open",
+            "paper-plane",
+            "video",
+            "video-slash",
+            "microphone",
+            "microphone-slash",
+
+            // ユーザー
+            "user",
+            "user-plus",
+            "user-minus",
+            "user-group",
+            "users",
+            "id-card",
+            "id-badge",
+            "address-book",
+            "address-card",
+
+            // ビジネス
+            "briefcase",
+            "building",
+            "chart-line",
+            "chart-bar",
+            "chart-pie",
+            "calculator",
+            "coins",
+            "money-bill",
+            "credit-card",
+            "receipt",
+
+            // デバイス
+            "mobile",
+            "tablet",
+            "laptop",
+            "desktop",
+            "print",
+            "camera",
+            "wifi",
+            "bluetooth",
+            "battery-full",
+            "battery-empty",
+
+            // 社会的
+            "facebook",
+            "twitter",
+            "instagram",
+            "linkedin",
+            "github",
+            "google",
+            "youtube",
+            "pinterest",
+            "reddit",
+            "whatsapp",
+
+            // 健康・医療
+            "heart-pulse",
+            "stethoscope",
+            "hospital",
+            "pills",
+            "prescription",
+            "user-doctor",
+            "user-nurse",
+            "wheelchair",
+            "syringe",
+            "vial",
+
+            // アプリケーション
+            "app",
+            "app-store",
+            "app-store-ios",
+            "chrome",
+            "edge",
+            "firefox",
+            "safari",
+            "windows",
+            "apple",
+            "android",
+            "linux",
+            "ubuntu",
+            "dropbox",
+            "google-drive",
+            "google-play",
+            "steam",
+            "paypal",
+            "spotify",
+            "palette",
+            "paint-roller",
+            "paintbrush",
+            "fill-drip",
+            "brush",
+            "toolbox",
+            "screwdriver",
+            "screwdriver-wrench",
+            "hammer",
+            "gavel",
+
+            // PC関連
+            "computer",
+            "computer-mouse",
+            "keyboard",
+            "display",
+            "server",
+            "network-wired",
+            "ethernet",
+            "router",
+            "wifi-router",
+            "satellite-dish",
+            "sd-card",
+            "usb",
+            "usb-drive",
+            "memory",
+            "microchip",
+            "hard-drive",
+            "floppy-disk",
+            "plug",
+            "power-off",
+            "bolt",
+            "battery-three-quarters",
+            "battery-half",
+            "battery-quarter",
+            "solar-panel",
+            "fan",
+            "temperature-arrow-up",
+            "temperature-arrow-down",
+
+            // メモ関連
+            "note-sticky",
+            "notes-medical",
+            "clipboard-list",
+            "clipboard-check",
+            "clipboard-question",
+            "clipboard-user",
+            "file-signature",
+            "file-contract",
+            "file-invoice",
+            "file-certificate",
+            "file-prescription",
+            "pen-to-square",
+            "pen-clip",
+            "pen-fancy",
+            "pen-nib",
+            "pen-ruler",
+            "marker",
+            "highlighter",
+
+            // 画像系
+            "image",
+            "image-portrait",
+            "images",
+            "photo-film",
+            "film",
+            "clapperboard",
+            "photo-video",
+            "camera-retro",
+            "panorama",
+            "video-camera",
+            "sliders",
+            "sliders-up",
+            "sliders-down",
+            "wand-magic",
+            "wand-magic-sparkles",
+            "eye",
+            "eye-dropper",
+            "eye-low-vision",
+            "eye-slash",
+            "icons",
+            "crop",
+            "crop-simple",
+            "object-group",
+            "object-ungroup",
+          ],
+
+          // Bootstrap Icons (BI)
+          bi: [
+            // 基本アイコン
+            "house",
+            "person",
+            "gear",
+            "heart",
+            "star",
+            "check",
+            "x",
+            "plus",
+            "dash",
+            "search",
+            "pencil",
+            "trash",
+            "exclamation-triangle",
+            "info-circle",
+            "question-circle",
+            "arrow-repeat",
+            "arrow-clockwise",
+            "download",
+            "upload",
+            "envelope",
+            "telephone",
+            "chat",
+            "calendar",
+            "clock",
+
+            // 矢印
+            "arrow-left",
+            "arrow-right",
+            "arrow-up",
+            "arrow-down",
+            "caret-left",
+            "caret-right",
+            "caret-up",
+            "caret-down",
+            "chevron-left",
+            "chevron-right",
+            "chevron-up",
+            "chevron-down",
+
+            // ファイル
+            "file",
+            "file-text",
+            "file-pdf",
+            "file-excel",
+            "file-word",
+            "folder",
+            "folder-fill",
+            "paperclip",
+            "clipboard",
+            "clipboard-check",
+
+            // メディア
+            "play",
+            "pause",
+            "stop",
+            "skip-start",
+            "skip-end",
+            "fast-forward",
+            "rewind",
+            "fullscreen",
+            "fullscreen-exit",
+
+            // レイアウト
+            "grid",
+            "grid-3x3",
+            "columns",
+            "layout-split",
+            "layout-text-window",
+            "table",
+            "list",
+            "list-ul",
+            "list-ol",
+            "card-list",
+
+            // フォーム
+            "check-circle",
+            "check-square",
+            "x-circle",
+            "x-square",
+            "toggle-on",
+            "toggle-off",
+            "input-cursor",
+            "textarea-resize",
+
+            // デバイス
+            "phone",
+            "tablet",
+            "laptop",
+            "display",
+            "printer",
+            "camera",
+            "wifi",
+            "bluetooth",
+            "battery",
+            "battery-charging",
+
+            // 社会的
+            "facebook",
+            "twitter",
+            "instagram",
+            "linkedin",
+            "github",
+            "google",
+            "youtube",
+            "pinterest",
+            "reddit",
+            "whatsapp",
+
+            // 天気
+            "sun",
+            "cloud",
+            "cloud-rain",
+            "cloud-snow",
+            "cloud-lightning",
+            "wind",
+            "thermometer",
+            "umbrella",
+
+            // アプリケーション
+            "app",
+            "app-indicator",
+            "window",
+            "window-dock",
+            "window-sidebar",
+            "window-split",
+            "window-stack",
+            "windows",
+            "apple",
+            "android",
+            "terminal",
+            "terminal-fill",
+            "code",
+            "code-slash",
+            "code-square",
+            "brush",
+            "palette",
+            "palette-fill",
+            "paint-bucket",
+            "droplet",
+            "droplet-fill",
+            "tools",
+            "tool",
+            "wrench",
+            "wrench-adjustable",
+            "hammer",
+            "screwdriver",
+
+            // PC関連
+            "pc",
+            "pc-display",
+            "pc-display-horizontal",
+            "pc-horizontal",
+            "motherboard",
+            "cpu",
+            "cpu-fill",
+            "gpu-card",
+            "hdd",
+            "hdd-fill",
+            "hdd-network",
+            "hdd-rack",
+            "server",
+            "modem",
+            "modem-fill",
+            "router",
+            "router-fill",
+            "mouse",
+            "mouse-fill",
+            "mouse-2",
+            "mouse-3",
+            "keyboard",
+            "keyboard-fill",
+            "usb",
+            "usb-fill",
+            "usb-drive",
+            "usb-drive-fill",
+            "sd-card",
+            "sd-card-fill",
+            "power",
+            "lightning",
+            "lightning-fill",
+            "plug",
+            "plug-fill",
+
+            // メモ関連
+            "journal",
+            "journal-album",
+            "journal-arrow-down",
+            "journal-arrow-up",
+            "journal-check",
+            "journal-code",
+            "journal-medical",
+            "journal-plus",
+            "journal-text",
+            "journals",
+            "stickies",
+            "stickies-fill",
+            "sticky",
+            "sticky-fill",
+            "card-text",
+            "card-heading",
+            "card-list",
+            "clipboard-data",
+            "clipboard-plus",
+            "clipboard-heart",
+            "clipboard-check",
+            "clipboard-x",
+            "pen",
+            "pencil-square",
+
+            // 画像系
+            "image",
+            "image-fill",
+            "image-alt",
+            "images",
+            "card-image",
+            "camera-fill",
+            "camera-video",
+            "camera-video-fill",
+            "camera-reels",
+            "camera-reels-fill",
+            "film",
+            "projector",
+            "projector-fill",
+            "eyeglasses",
+            "eye",
+            "eye-fill",
+            "eye-slash",
+            "eye-slash-fill",
+            "crop",
+            "aspect-ratio",
+            "aspect-ratio-fill",
+            "bounding-box",
+            "bounding-box-circles",
+            "brush-fill",
+            "paint-bucket",
+            "palette2",
+            "vector-pen",
+            "layers",
+            "layers-fill",
+            "layers-half",
+            "stack",
+          ],
+
+          // Clarity Icons
+          clarity: [
+            // 基本アイコン
+            "home-line",
+            "user-line",
+            "cog-line",
+            "heart-line",
+            "star-line",
+            "check-line",
+            "close-line",
+            "plus-line",
+            "minus-line",
+            "search-line",
+            "pencil-line",
+            "trash-line",
+            "warning-line",
+            "info-line",
+            "help-line",
+            "refresh-line",
+            "sync-line",
+            "download-line",
+            "upload-line",
+            "email-line",
+            "phone-handset-line",
+            "talk-bubbles-line",
+            "calendar-line",
+            "clock-line",
+
+            // インターフェース
+            "bars-line",
+            "menu-line",
+            "details-line",
+            "drag-handle-line",
+            "row-line",
+            "column-line",
+            "grid-view-line",
+            "list-line",
+            "filter-line",
+            "filter-off-line",
+
+            // 矢印・ナビゲーション
+            "angle-line",
+            "angle-double-line",
+            "arrow-line",
+            "circle-arrow-line",
+            "collapse-line",
+            "expand-line",
+            "caret-line",
+            "ellipsis-vertical-line",
+
+            // オブジェクト
+            "objects-line",
+            "file-line",
+            "folder-line",
+            "folder-open-line",
+            "document-line",
+            "bundle-line",
+            "archive-line",
+            "image-line",
+
+            // デバイス
+            "mobile-line",
+            "tablet-line",
+            "computer-line",
+            "display-line",
+            "printer-line",
+            "camera-line",
+            "video-line",
+            "microphone-line",
+            "headphones-line",
+
+            // データ
+            "clipboard-line",
+            "note-line",
+            "book-line",
+            "form-line",
+            "success-standard-line",
+            "error-standard-line",
+            "warning-standard-line",
+
+            // メディア
+            "play-line",
+            "pause-line",
+            "stop-line",
+            "step-forward-line",
+            "rewind-line",
+            "fast-forward-line",
+            "volume-line",
+            "volume-mute-line",
+
+            // 技術
+            "code-line",
+            "application-line",
+            "terminal-line",
+            "command-line",
+            "install-line",
+            "uninstall-line",
+            "update-line",
+            "backup-line",
+
+            // 通知
+            "notification-line",
+            "bell-line",
+            "alert-line",
+            "bubble-line",
+            "bubble-exclamation-line",
+            "bubble-error-line",
+            "event-line",
+
+            // 社会的
+            "social-line",
+            "share-line",
+            "thumbs-up-line",
+            "thumbs-down-line",
+            "star-line",
+            "half-star-line",
+            "favorite-line",
+            "heart-line",
+
+            // アプリケーション
+            "applications-line",
+            "applications-plus-line",
+            "app-store-line",
+            "library-line",
+            "window-line",
+            "window-close-line",
+            "window-max-line",
+            "window-min-line",
+            "window-restore-line",
+            "browser-line",
+            "html5-line",
+            "css3-line",
+            "javascript-line",
+            "python-line",
+            "php-line",
+            "paint-brush-line",
+            "color-palette-line",
+            "color-picker-line",
+            "design-line",
+            "layers-line",
+            "tools-line",
+            "wrench-line",
+            "screwdriver-line",
+            "ruler-line",
+            "ruler-pencil-line",
+
+            // PC関連
+            "computer-line",
+            "desktop-line",
+            "laptop-line",
+            "workstation-line",
+            "server-line",
+            "server-cluster-line",
+            "network-line",
+            "network-globe-line",
+            "network-switch-line",
+            "host-line",
+            "rack-server-line",
+            "cluster-line",
+            "resource-pool-line",
+            "keyboard-line",
+            "mouse-line",
+            "usb-line",
+            "memory-line",
+            "cpu-line",
+            "hard-drive-line",
+            "hard-drive-disk-line",
+            "solid-state-disk-line",
+            "floppy-line",
+            "cd-dvd-line",
+
+            // メモ関連
+            "note-line",
+            "notes-line",
+            "sticky-note-line",
+            "file-group-line",
+            "file-settings-line",
+            "clipboard-line",
+            "clipboard-check-line",
+            "clipboard-list-line",
+            "clipboard-success-line",
+            "text-edit-line",
+            "paragraph-line",
+            "font-size-line",
+            "bold-line",
+            "italic-line",
+            "underline-line",
+            "align-left-line",
+            "align-center-line",
+            "align-right-line",
+            "align-justify-line",
+
+            // 画像系
+            "image-line",
+            "image-gallery-line",
+            "landscape-line",
+            "picture-line",
+            "camera-line",
+            "video-gallery-line",
+            "movie-line",
+            "film-strip-line",
+            "camcorder-line",
+            "embed-line",
+            "layers-line",
+            "crop-line",
+            "flip-vertical-line",
+            "flip-horizontal-line",
+            "rotate-line",
+            "color-line",
+            "color-palette-line",
+            "contrast-line",
+            "brightness-line",
+            "eye-line",
+            "eye-hide-line",
+            "eye-show-line",
+            "view-columns-line",
+            "view-list-line",
+          ],
+
+          // Tabler Icons
+          tabler: [
+            // 基本アイコン
+            "home",
+            "user",
+            "settings",
+            "heart",
+            "star",
+            "check",
+            "x",
+            "plus",
+            "minus",
+            "search",
+            "pencil",
+            "trash",
+            "alert-triangle",
+            "info-circle",
+            "help",
+            "refresh",
+            "rotate",
+            "download",
+            "upload",
+            "mail",
+            "phone",
+            "message",
+            "calendar",
+            "clock",
+
+            // 矢印
+            "arrow-up",
+            "arrow-down",
+            "arrow-left",
+            "arrow-right",
+            "arrow-up-left",
+            "arrow-up-right",
+            "arrow-down-left",
+            "arrow-down-right",
+            "chevron-up",
+            "chevron-down",
+            "chevron-left",
+            "chevron-right",
+
+            // インターフェース
+            "menu",
+            "layout",
+            "dashboard",
+            "dots",
+            "dots-vertical",
+            "filter",
+            "sort-ascending",
+            "sort-descending",
+            "list",
+            "list-check",
+
+            // ファイル・フォルダ
+            "file",
+            "file-text",
+            "file-upload",
+            "file-download",
+            "file-check",
+            "folder",
+            "folder-plus",
+            "folder-minus",
+            "paperclip",
+            "clipboard",
+
+            // エディタ
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "align-left",
+            "align-center",
+            "align-right",
+            "align-justified",
+            "list-numbers",
+            "list-bullets",
+
+            // デバイス
+            "device-mobile",
+            "device-tablet",
+            "device-laptop",
+            "device-desktop",
+            "printer",
+            "camera",
+            "photo",
+            "video",
+            "microphone",
+            "headphones",
+
+            // 通信
+            "mail",
+            "phone",
+            "message",
+            "message-circle",
+            "send",
+            "share",
+            "rss",
+            "wifi",
+            "bluetooth",
+            "broadcast",
+
+            // 金融
+            "currency-dollar",
+            "currency-euro",
+            "currency-pound",
+            "currency-yen",
+            "currency-bitcoin",
+            "credit-card",
+            "receipt",
+            "coin",
+            "wallet",
+            "shopping-cart",
+
+            // 天気
+            "sun",
+            "moon",
+            "cloud",
+            "cloud-rain",
+            "cloud-snow",
+            "cloud-storm",
+            "temperature",
+            "wind",
+            "umbrella",
+            "uv-index",
+
+            // 社会的
+            "brand-facebook",
+            "brand-twitter",
+            "brand-instagram",
+            "brand-linkedin",
+            "brand-github",
+            "brand-google",
+            "brand-youtube",
+            "brand-pinterest",
+            "brand-reddit",
+            "brand-whatsapp",
+
+            // 地図
+            "map",
+            "map-pin",
+            "compass",
+            "world",
+            "location",
+            "route",
+            "direction",
+            "flag",
+            "car",
+            "plane",
+
+            // アプリケーション
+            "apps",
+            "window",
+            "browser",
+            "browser-check",
+            "browser-plus",
+            "browser-x",
+            "brand-android",
+            "brand-apple",
+            "brand-windows",
+            "brand-linux",
+            "brand-ubuntu",
+            "brand-chrome",
+            "brand-edge",
+            "brand-firefox",
+            "brand-safari",
+            "brand-opera",
+            "brand-visual-studio",
+            "brand-vscode",
+            "brand-sublime-text",
+            "brand-notion",
+            "palette",
+            "brush",
+            "brush-off",
+            "paint",
+            "color-swatch",
+            "color-picker",
+            "tool",
+            "tools",
+            "toolbox",
+            "hammer",
+            "axe",
+            "saw",
+            "screwdriver",
+
+            // PC関連
+            "device-desktop",
+            "device-desktop-analytics",
+            "device-laptop",
+            "device-laptop-off",
+            "server",
+            "server-2",
+            "server-bolt",
+            "server-cog",
+            "server-off",
+            "cpu",
+            "device-analytics",
+            "devices",
+            "devices-2",
+            "device-computer-camera",
+            "device-computer-camera-off",
+            "keyboard",
+            "keyboard-off",
+            "keyboard-show",
+            "mouse",
+            "mouse-2",
+            "mouse-off",
+            "printer",
+            "printer-off",
+            "usb",
+            "sd-card",
+            "memory-stick",
+            "disc",
+            "floppy",
+            "floppy-disk",
+            "database",
+            "database-export",
+            "database-import",
+            "database-off",
+
+            // メモ関連
+            "notes",
+            "notebook",
+            "clipboard",
+            "clipboard-check",
+            "clipboard-data",
+            "clipboard-heart",
+            "clipboard-list",
+            "clipboard-plus",
+            "clipboard-text",
+            "clipboard-x",
+            "file-certificate",
+            "file-description",
+            "file-dots",
+            "file-invoice",
+            "file-pencil",
+            "file-report",
+            "file-search",
+            "file-shredder",
+            "file-symlink",
+            "file-time",
+            "file-x",
+            "files",
+            "forms",
+
+            // 画像系
+            "photo",
+            "photo-plus",
+            "photo-edit",
+            "photo-search",
+            "photo-off",
+            "photos",
+            "camera",
+            "camera-plus",
+            "camera-minus",
+            "camera-selfie",
+            "camera-off",
+            "picture-in-picture",
+            "picture-in-picture-off",
+            "picture-in-picture-on",
+            "movie",
+            "video",
+            "video-minus",
+            "video-off",
+            "video-plus",
+            "polaroid",
+            "panorama-horizontal",
+            "panorama-vertical",
+            "crop",
+            "resize",
+            "exposure",
+            "contrast",
+            "brightness",
+            "flip-horizontal",
+            "flip-vertical",
+            "aspect-ratio",
+            "viewfinder",
+            "color-filter",
+            "color-picker",
+            "color-swatch",
+            "palette",
+            "paint",
+            "brush",
+            "bucket",
+            "eyedropper",
+            "layers-intersect",
+            "layers-subtract",
+            "layers-union",
+            "layers-linked",
+            "layers-difference",
+          ],
+        };
+
+        // 現在の状態変数
+        let currentBgColor = bgColorPicker.value;
+        let currentImage = null;
+        let currentIcon = null;
+        let currentIconColor = iconColorPicker.value;
+        let originalImageData = null; // 元の画像データを保持
+        let currentIconSet = iconSetSelector.value;
+        let currentText = null;
+        let currentTextColor = textColorPicker.value;
+        let currentTextFont = textFont.value;
+
+        // 履歴の初期化
+        let history = [];
+        loadHistory();
+
+        // 初期アイコングリッドの表示
+        updateIconGrid();
+
+        // テキスト適用ボタンのイベントリスナー
+        applyTextButton.addEventListener("click", function () {
+          const text = textInput.value.trim();
+          if (text.length === 0) {
+            textStatus.textContent = "テキストを入力してください。";
+            return;
+          }
+
+          if (text.length > 2) {
+            textStatus.textContent = "1～2文字までしか入力できません。";
+            return;
+          }
+
+          currentText = text;
+          currentTextColor = textColorPicker.value;
+          currentTextFont = textFont.value;
+
+          textStatus.textContent = `テキスト「${text}」を追加しました。`;
+          drawCanvas();
+        });
+
+        // アイコンセット変更時の処理
+        iconSetSelector.addEventListener("change", function (e) {
+          currentIconSet = e.target.value;
+          updateIconGrid();
+        });
+
+        // アイコン検索時の処理
+        iconSearch.addEventListener("input", function (e) {
+          updateIconGrid(e.target.value);
+        });
+
+        // アイコン色の変更時の処理
+        iconColorPicker.addEventListener("input", function (e) {
+          currentIconColor = e.target.value;
+          if (currentIcon) {
+            drawCanvas();
+          }
+        });
+
+        // アイコングリッドの更新
+        function updateIconGrid(searchTerm = "") {
+          // グリッドをクリア
+          iconGrid.innerHTML = "";
+
+          // 現在のアイコンセットを取得
+          const icons = iconSets[currentIconSet];
+
+          // 検索語があれば、それでフィルタリング
+          const filteredIcons = searchTerm
+            ? icons.filter((icon) => icon.includes(searchTerm.toLowerCase()))
+            : icons;
+
+          // アイコンをグリッドに追加
+          filteredIcons.forEach((icon) => {
+            const iconElement = document.createElement("div");
+            iconElement.className = "icon-item";
+            iconElement.dataset.icon = icon;
+
+            // Iconifyアイコンを追加
+            const prefix = getIconPrefix(currentIconSet);
+            const iconName = `${prefix}:${icon}`;
+
+            // アイコンスパンを作成
+            const iconSpan = document.createElement("span");
+            iconSpan.className = "iconify";
+            iconSpan.dataset.icon = iconName;
+            iconSpan.style.fontSize = "24px";
+            iconSpan.style.color = currentIconColor;
+
+            iconElement.appendChild(iconSpan);
+            iconElement.addEventListener("click", () => {
+              addIcon(iconName);
+            });
+            iconGrid.appendChild(iconElement);
+          });
+
+          // Iconifyを再スキャン
+          if (window.Iconify) {
+            window.Iconify.scan();
+          }
+        }
+
+        // アイコンプレフィックスを取得
+        function getIconPrefix(iconSet) {
+          switch (iconSet) {
+            case "mdi":
+              return "mdi";
+            case "fa":
+              return "fa6-solid";
+            case "bi":
+              return "bi";
+            case "clarity":
+              return "clarity";
+            case "tabler":
+              return "tabler";
+            default:
+              return "mdi";
+          }
+        }
+
+        // 履歴読み込み
+        function loadHistory() {
+          const savedHistory = localStorage.getItem("iconGeneratorHistory");
+          if (savedHistory) {
+            history = JSON.parse(savedHistory);
+            renderHistory();
+          }
+        }
+
+        // 履歴の保存
+        function saveToHistory() {
+          // Canvasのデータを取得
+          const dataUrl = canvas.toDataURL("image/png");
+
+          // 履歴に追加
+          history.unshift(dataUrl);
+
+          // 履歴の上限を設定（例：最大10個）
+          if (history.length > 10) {
+            history.pop();
+          }
+
+          // LocalStorageに保存
+          localStorage.setItem("iconGeneratorHistory", JSON.stringify(history));
+
+          // 履歴の表示を更新
+          renderHistory();
+        }
+
+        // 履歴の表示
+        function renderHistory() {
+          historyContainer.innerHTML = "";
+
+          history.forEach((dataUrl, index) => {
+            const item = document.createElement("div");
+            item.className = "history-item";
+            item.style.backgroundImage = `url(${dataUrl})`;
+            item.style.backgroundSize = "cover";
+
+            item.addEventListener("click", () => {
+              loadFromHistoryItem(dataUrl);
+            });
+
+            historyContainer.appendChild(item);
+          });
+        }
+
+        // 履歴アイテムから読み込み
+        function loadFromHistoryItem(dataUrl) {
+          const img = new Image();
+          img.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            updatePreviews();
+
+            // 画像データとして保存
+            currentImage = img;
+            currentIcon = null;
+            currentText = null;
+
+            // オリジナル画像データを保存（塗りつぶし用）
+            const tempCanvas = document.createElement("canvas");
+            tempCanvas.width = img.width;
+            tempCanvas.height = img.height;
+            const tempCtx = tempCanvas.getContext("2d");
+            tempCtx.drawImage(img, 0, 0);
+            originalImageData = tempCtx.getImageData(
+              0,
+              0,
+              img.width,
+              img.height
+            );
+          };
+          img.src = dataUrl;
+        }
+
+        // 背景色の変更時の処理
+        bgColorPicker.addEventListener("input", function (e) {
+          currentBgColor = e.target.value;
+          drawCanvas();
+        });
+
+        // テキスト色の変更時の処理
+        textColorPicker.addEventListener("input", function (e) {
+          currentTextColor = e.target.value;
+          if (currentText) {
+            drawCanvas();
+          }
+        });
+
+        // テキストフォントの変更時の処理
+        textFont.addEventListener("change", function (e) {
+          currentTextFont = e.target.value;
+          if (currentText) {
+            drawCanvas();
+          }
+        });
+
+        // キャンバスの描画
+        function drawCanvas() {
+          // キャンバスをクリア
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // 背景色を描画
+          ctx.fillStyle = currentBgColor;
+          ctx.beginPath();
+
+          // 角丸の半径 (22%)
+          const radius = canvas.width * 0.22;
+
+          // 角丸長方形を描画
+          ctx.moveTo(radius, 0);
+          ctx.lineTo(canvas.width - radius, 0);
+          ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
+          ctx.lineTo(canvas.width, canvas.height - radius);
+          ctx.quadraticCurveTo(
+            canvas.width,
+            canvas.height,
+            canvas.width - radius,
+            canvas.height
+          );
+          ctx.lineTo(radius, canvas.height);
+          ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
+          ctx.lineTo(0, radius);
+          ctx.quadraticCurveTo(0, 0, radius, 0);
+          ctx.closePath();
+          ctx.fill();
+
+          // 画像がある場合は描画
+          if (currentImage) {
+            // クリッピングパスを設定
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(canvas.width - radius, 0);
+            ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
+            ctx.lineTo(canvas.width, canvas.height - radius);
+            ctx.quadraticCurveTo(
+              canvas.width,
+              canvas.height,
+              canvas.width - radius,
+              canvas.height
+            );
+            ctx.lineTo(radius, canvas.height);
+            ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.clip();
+
+            // 画像をキャンバスの中央に配置
+            const aspectRatio = currentImage.width / currentImage.height;
+            let drawWidth, drawHeight;
+
+            if (aspectRatio > 1) {
+              // 幅が高さより大きい場合
+              drawWidth = canvas.width * 0.8;
+              drawHeight = drawWidth / aspectRatio;
+            } else {
+              // 高さが幅より大きい場合
+              drawHeight = canvas.height * 0.8;
+              drawWidth = drawHeight * aspectRatio;
+            }
+
+            const x = (canvas.width - drawWidth) / 2;
+            const y = (canvas.height - drawHeight) / 2;
+
+            ctx.drawImage(currentImage, x, y, drawWidth, drawHeight);
+            ctx.restore();
+          }
+
+          // アイコンがある場合は描画
+          if (currentIcon) {
+            renderIconToCanvas();
+          }
+
+          // テキストがある場合は描画
+          if (currentText) {
+            renderTextToCanvas();
+          }
+
+          // プレビューを更新
+          updatePreviews();
+        }
+        // テキストをキャンバスに描画する関数
+        function renderTextToCanvas() {
+          ctx.save();
+
+          // テキストの長さに基づいてサイズを調整（2文字の場合は1.5倍）
+          const fontSize =
+            currentText.length === 1
+              ? canvas.height * 0.4
+              : canvas.height * 0.3;
+
+          ctx.fillStyle = currentTextColor;
+          ctx.font = `bold ${fontSize}px ${currentTextFont}`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+
+          // 中央より20px上に配置
+          const x = canvas.width / 2;
+          const y = canvas.height / 2 - 20;
+
+          ctx.fillText(currentText, x, y);
+          ctx.restore();
+        }
+
+        // アイコンをキャンバスに描画する関数
+        function renderIconToCanvas() {
+          // サーバー経由のレンダリングではなく、Iconifyの直接APIを使用
+          const iconSvgString = Iconify.renderHTML(currentIcon, {
+            width: "auto",
+            height: "auto",
+            color: currentIconColor,
+          });
+
+          if (iconSvgString) {
+            // DOM要素に変換
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(iconSvgString, "image/svg+xml");
+            const svg = doc.documentElement;
+
+            // サイズを設定
+            svg.setAttribute("width", "200");
+            svg.setAttribute("height", "200");
+
+            // SVGをImageに変換
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], { type: "image/svg+xml" });
+            const url = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = function () {
+              // アイコンを描画
+              const iconSize = canvas.width * 0.6;
+              const x = (canvas.width - iconSize) / 2;
+              const y = (canvas.height - iconSize) / 2;
+
+              ctx.drawImage(img, x, y, iconSize, iconSize);
+              URL.revokeObjectURL(url);
+              updatePreviews();
+            };
+            img.src = url;
+          } else {
+            console.error("アイコンの描画に失敗しました:", currentIcon);
+            iconStatus.textContent = "アイコンの描画に失敗しました";
+          }
+        }
+
+        // プレビューの更新
+        function updatePreviews() {
+          preview16.clearRect(0, 0, 16, 16);
+          preview16.drawImage(canvas, 0, 0, 16, 16);
+
+          preview32.clearRect(0, 0, 32, 32);
+          preview32.drawImage(canvas, 0, 0, 32, 32);
+
+          preview48.clearRect(0, 0, 48, 48);
+          preview48.drawImage(canvas, 0, 0, 48, 48);
+
+          preview64.clearRect(0, 0, 64, 64);
+          preview64.drawImage(canvas, 0, 0, 64, 64);
+        }
+
+        // アイコン追加
+        function addIcon(iconName) {
+          currentIcon = iconName;
+          currentImage = null; // アイコンを追加する場合は画像をクリア
+          originalImageData = null; // 元の画像データもクリア
+          iconStatus.textContent = `アイコン「${iconName}」を選択しました`;
+          drawCanvas();
+
+          // アイコンをPNG画像に変換して保存（塗りつぶし用）
+          convertIconToPng(iconName);
+        }
+
+        // アイコンをPNG画像に変換する関数
+        function convertIconToPng(iconName) {
+          // アイコンをSVGとして取得
+          const iconSvgString = Iconify.renderHTML(iconName, {
+            width: "auto",
+            height: "auto",
+            color: currentIconColor,
+          });
+
+          if (iconSvgString) {
+            // DOM要素に変換
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(iconSvgString, "image/svg+xml");
+            const svg = doc.documentElement;
+
+            // サイズを設定
+            svg.setAttribute("width", "256");
+            svg.setAttribute("height", "256");
+
+            // SVGをImageに変換
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], { type: "image/svg+xml" });
+            const url = URL.createObjectURL(svgBlob);
+
+            // 一時的なキャンバスを作成
+            const tempCanvas = document.createElement("canvas");
+            tempCanvas.width = 256;
+            tempCanvas.height = 256;
+            const tempCtx = tempCanvas.getContext("2d");
+
+            // 背景を透明にする
+            tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+            const img = new Image();
+            img.onload = function () {
+              // 画像をキャンバスに描画
+              const iconSize = 200;
+              const x = (tempCanvas.width - iconSize) / 2;
+              const y = (tempCanvas.height - iconSize) / 2;
+
+              tempCtx.drawImage(img, x, y, iconSize, iconSize);
+              URL.revokeObjectURL(url);
+
+              // 画像データを取得して保存
+              originalImageData = tempCtx.getImageData(
+                0,
+                0,
+                tempCanvas.width,
+                tempCanvas.height
+              );
+              iconStatus.textContent =
+                "アイコンがPNGに変換され、塗りつぶし可能になりました";
+            };
+            img.src = url;
+          } else {
+            console.error("アイコンのPNG変換に失敗しました:", iconName);
+            iconStatus.textContent = "アイコンのPNG変換に失敗しました";
+          }
+        }
+
+        // 塗りつぶし適用ボタンのイベントリスナー
+        applyFillButton.addEventListener("click", function () {
+          if (!originalImageData) {
+            fillStatus.textContent =
+              "画像またはアイコンをドロップ/選択してから塗りつぶしを適用してください。";
+            return;
+          }
+
+          // 一時的なキャンバスを作成して処理
+          const tempCanvas = document.createElement("canvas");
+          tempCanvas.width = originalImageData.width;
+          tempCanvas.height = originalImageData.height;
+          const tempCtx = tempCanvas.getContext("2d");
+          tempCtx.putImageData(originalImageData, 0, 0);
+
+          // 画像データを取得
+          const imageData = tempCtx.getImageData(
+            0,
+            0,
+            tempCanvas.width,
+            tempCanvas.height
+          );
+          const data = imageData.data;
+
+          // 白塗りつぶしが有効な場合
+          if (fillWhiteCheckbox.checked) {
+            const whiteThreshold = parseInt(whiteThresholdSlider.value);
+            const fillColor = hexToRgb(whiteFillColorPicker.value);
+
+            // 各ピクセルを処理
+            for (let i = 0; i < data.length; i += 4) {
+              // RGBが閾値以上（白に近い）かつアルファ値が0でない場合
+              if (
+                data[i] >= whiteThreshold &&
+                data[i + 1] >= whiteThreshold &&
+                data[i + 2] >= whiteThreshold &&
+                data[i + 3] > 0
+              ) {
+                // 塗りつぶしカラーに置き換え
+                data[i] = fillColor.r;
+                data[i + 1] = fillColor.g;
+                data[i + 2] = fillColor.b;
+              }
+            }
+          }
+
+          // 黒塗りつぶしが有効な場合
+          if (fillBlackCheckbox.checked) {
+            const blackThreshold = parseInt(blackThresholdSlider.value);
+            const fillColor = hexToRgb(blackFillColorPicker.value);
+
+            // 各ピクセルを処理
+            for (let i = 0; i < data.length; i += 4) {
+              // RGBが閾値以下（黒に近い）かつアルファ値が0でない場合
+              if (
+                data[i] <= blackThreshold &&
+                data[i + 1] <= blackThreshold &&
+                data[i + 2] <= blackThreshold &&
+                data[i + 3] > 0
+              ) {
+                // 塗りつぶしカラーに置き換え
+                data[i] = fillColor.r;
+                data[i + 1] = fillColor.g;
+                data[i + 2] = fillColor.b;
+              }
+            }
+          }
+
+          // 処理後の画像データをキャンバスに書き戻す
+          tempCtx.putImageData(imageData, 0, 0);
+
+          // 新しい画像オブジェクトを作成
+          const newImage = new Image();
+          newImage.onload = function () {
+            currentImage = newImage;
+            currentIcon = null; // 塗りつぶし後は画像として扱う
+            drawCanvas();
+            fillStatus.textContent = "塗りつぶしが適用されました！";
+          };
+          newImage.src = tempCanvas.toDataURL("image/png");
+        });
+
+        // HEXカラーコードをRGB値に変換する関数
+        function hexToRgb(hex) {
+          // #を除去
+          hex = hex.replace(/^#/, "");
+
+          // 短縮形の場合は展開
+          if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+          }
+
+          // 16進数を10進数に変換
+          const r = parseInt(hex.substring(0, 2), 16);
+          const g = parseInt(hex.substring(2, 4), 16);
+          const b = parseInt(hex.substring(4, 6), 16);
+
+          return { r, g, b };
+        }
+
+        // ドラッグ&ドロップの処理
+        dropZone.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          this.classList.add("active");
+        });
+
+        dropZone.addEventListener("dragleave", function () {
+          this.classList.remove("active");
+        });
+
+        dropZone.addEventListener("drop", function (e) {
+          e.preventDefault();
+          this.classList.remove("active");
+
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            const file = files[0];
+
+            // 画像ファイルかどうかチェック
+            if (file.type.match("image.*")) {
+              const reader = new FileReader();
+
+              reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                  currentImage = img;
+                  currentIcon = null; // 画像を追加する場合はアイコンをクリア
+                  currentText = null; // テキストもクリア
+
+                  // オリジナル画像データを保存（塗りつぶし用）
+                  const tempCanvas = document.createElement("canvas");
+                  tempCanvas.width = img.width;
+                  tempCanvas.height = img.height;
+                  const tempCtx = tempCanvas.getContext("2d");
+                  tempCtx.drawImage(img, 0, 0);
+                  originalImageData = tempCtx.getImageData(
+                    0,
+                    0,
+                    img.width,
+                    img.height
+                  );
+
+                  drawCanvas();
+                  fillStatus.textContent =
+                    "画像が読み込まれました。塗りつぶしを適用できます。";
+                };
+                img.src = e.target.result;
+              };
+
+              reader.readAsDataURL(file);
+            } else {
+              alert("画像ファイルをドロップしてください。");
+            }
+          }
+        });
+
+        // リセットボタン
+        resetButton.addEventListener("click", function () {
+          currentImage = null;
+          originalImageData = null;
+          currentIcon = null;
+          currentText = null;
+          textInput.value = "";
+          fillWhiteCheckbox.checked = false;
+          fillBlackCheckbox.checked = false;
+          fillStatus.textContent = "";
+          iconStatus.textContent = "";
+          textStatus.textContent = "";
+          drawCanvas();
+        });
+
+        // 保存ボタン
+        saveButton.addEventListener("click", function () {
+          // アイコンのデータURLを取得
+          const dataUrl = canvas.toDataURL("image/png");
+
+          // ファイル名を生成（テキストがある場合はそれを使用、なければ日付）
+          let filename = "";
+          if (currentText) {
+            filename = `icon_${currentText}_${iconSizeSelect.value}.png`;
+          } else {
+            const now = new Date();
+            const timestamp = `${now.getFullYear()}${(now.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}${now
+              .getDate()
+              .toString()
+              .padStart(2, "0")}${now
+              .getHours()
+              .toString()
+              .padStart(2, "0")}${now
+              .getMinutes()
+              .toString()
+              .padStart(2, "0")}`;
+            filename = `icon_${timestamp}_${iconSizeSelect.value}.png`;
+          }
+
+          // サーバーに画像データを送信
+          fetch("/save_icon", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              imageData: dataUrl,
+              filename: filename,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // 履歴に保存
+                saveToHistory();
+                fillStatus.textContent = `アイコンが保存されました。ファイル名: ${filename} 保存先: img_data/${filename}`;
+              } else {
+                fillStatus.textContent = `エラー: ${
+                  data.error || "保存に失敗しました。"
+                }`;
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              fillStatus.textContent = `エラー: ${error.message}`;
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

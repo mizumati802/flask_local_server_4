@@ -1,0 +1,68 @@
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3: can't open file '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/app.py': [Errno 2] No such file or directory
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:10765
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [04/May/2025 14:05:39] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [04/May/2025 14:05:39] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:10765
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [04/May/2025 14:06:49] "GET / HTTP/1.1" 200 -
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+Address already in use
+Port 10765 is in use by another program. Either identify and stop that program, or start the server with a different port.
+/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/trio/_core/_multierror.py:511: RuntimeWarning: You seem to already have a custom sys.excepthook handler installed. I'll skip installing Trio's custom handler, but this means MultiErrors will not show full tracebacks.
+  warnings.warn(
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:11765
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [13/May/2025 00:00:27] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:00:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
