@@ -172,3 +172,48 @@ ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumach
  * Restarting with watchdog (fsevents)
  * Debugger is active!
  * Debugger PIN: 777-169-866
+127.0.0.1 - - [13/May/2025 00:07:52] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:53] "GET /icon_generator HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:54] "GET /personal_record HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:54] "GET /static/personal_record.css HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:54] "GET /static/personal_record.js HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:54] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:54] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:07:55] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:08:01] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:36] "GET /personal_record HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:36] "GET /static/personal_record.css HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:36] "GET /static/personal_record.js HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:36] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:36] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:37] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:40] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:41] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:42] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:43] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:53] "POST /create HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:55] "GET /personal_record HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:55] "[36mGET /static/personal_record.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/May/2025 00:09:55] "[36mGET /static/personal_record.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/May/2025 00:09:55] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:55] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:55] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:09:59] "POST /delete/4213 HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:10:00] "GET /personal_record HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:10:00] "[36mGET /static/personal_record.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/May/2025 00:10:00] "[36mGET /static/personal_record.js HTTP/1.1[0m" 304 -
+127.0.0.1 - - [13/May/2025 00:10:00] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:10:00] "GET /api/records/all HTTP/1.1" 200 -
+127.0.0.1 - - [13/May/2025 00:10:01] "GET /api/records/all HTTP/1.1" 200 -
+[2025-05-13 20:36:06,552] ERROR in routes: Error in personal_record: no such table: user_records
+127.0.0.1 - - [13/May/2025 20:36:06] "[35m[1mGET /personal_record HTTP/1.1[0m" 500 -
+[2025-05-13 20:36:19,559] ERROR in routes: Error in personal_record: no such table: user_records
+127.0.0.1 - - [13/May/2025 20:36:19] "[35m[1mGET /personal_record HTTP/1.1[0m" 500 -
+ * Detected change in '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py', reloading
+ * Restarting with watchdog (fsevents)
+ * Debugger is active!
+ * Debugger PIN: 777-169-866
+ * Detected change in '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/routes.py', reloading
+ * Restarting with watchdog (fsevents)
+ * Debugger is active!
+ * Debugger PIN: 777-169-866

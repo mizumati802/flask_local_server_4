@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, redirect, url_for, g, send_fr
 from werkzeug.utils import secure_filename  # 追加：ファイル名の安全化用
 
 # データベースファイルのパス
-DATABASE = '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_3/user_records.db'
+DATABASE = '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/user_records.db'
 
 # データベース接続を取得
 def get_db():
