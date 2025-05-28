@@ -273,6 +273,13 @@
                                     <i class="fas fa-book me-1"></i> 日記一覧
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="filter-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#filter-content" type="button" role="tab" 
+                                        aria-controls="filter-content" aria-selected="false">
+                                    <i class="fas fa-filter me-1"></i> カテゴリ2フィルタ
+                                </button>
+                            </li>
                         </ul>
                         
                         <!-- タブコンテンツ -->
@@ -327,6 +334,34 @@
                             <div class="tab-pane fade" id="diaries-content" role="tabpanel" aria-labelledby="diaries-tab">
                                 <div id="diary-list-container">
                                     <!-- 日記リストがここに動的に生成されます -->
+                                </div>
+                            </div>
+                            
+                            <!-- 追加：カテゴリ2フィルタタブ -->
+                            <div class="tab-pane fade" id="filter-content" role="tabpanel" aria-labelledby="filter-tab">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="category2-filter" class="form-label">カテゴリ2で絞り込み</label>
+                                        <select class="form-select" id="category2-filter">
+                                            <option value="">すべて表示</option>
+                                            <!-- カテゴリ2のオプションが動的に追加されます -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 d-flex align-items-end">
+                                        <button type="button" class="btn btn-success me-2" onclick="filterByCategory2()">
+                                            <i class="fas fa-filter me-1"></i> フィルタ実行
+                                        </button>
+                                        <button type="button" class="btn btn-info" onclick="exportFilteredJson()">
+                                            <i class="fas fa-download me-1"></i> JSON出力
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div id="filtered-records-container">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        カテゴリ2を選択してフィルタ実行ボタンを押してください。
+                                    </div>
                                 </div>
                             </div>
                         </div>

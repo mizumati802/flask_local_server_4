@@ -8,6 +8,7 @@ let existingCategories = {
 let allRecords = []; // すべてのレコードを保持する配列
 let uploadedImagePaths = []; // 通常レコード用の画像パス配列
 let diaryUploadedImagePaths = []; // 日記用の画像パス配列
+let filteredRecords = []; // 追加：フィルタされたレコードを保持する配列
 
 // DOMが読み込まれたら実行
 document.addEventListener('DOMContentLoaded', function() {
@@ -30,6 +31,9 @@ function initApp() {
     setupImageUpload();
     setupDiaryImageUpload();
     setupImageModal();
+    
+    // 追加：カテゴリ2フィルタの初期化
+    loadCategory2Options();
 }
 
 // イベントリスナーの設定
@@ -98,6 +102,11 @@ function setupTabListeners() {
     // 元のイベントも保持
     document.getElementById('diaries-tab').addEventListener('shown.bs.tab', function() {
         buildDiaryList();
+    });
+    
+    // 追加：フィルタタブのイベント
+    document.getElementById('filter-tab').addEventListener('shown.bs.tab', function() {
+        loadCategory2Options();
     });
     
     // 修正: 初期表示時にも日記リストを事前構築しておく
@@ -207,6 +216,156 @@ function executeRowJson() {
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-play me-1"></i> row_json.py実行';
     });
+}
+
+// 追加：カテゴリ2のオプションを読み込む関数
+function loadCategory2Options() {
+    fetch('/api/categories/category2')
+        .then(response => response.json())
+        .then(categories => {
+            const select = document.getElementById('category2-filter');
+            
+            // 既存のオプション（最初のもの以外）をクリア
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            // 新しいオプションを追加
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading category2 options:', error);
+            showMessage('カテゴリ2の読み込み中にエラーが発生しました', 'danger');
+        });
+}
+
+// 追加：カテゴリ2でフィルタする関数
+function filterByCategory2() {
+    const selectedCategory2 = document.getElementById('category2-filter').value;
+    const container = document.getElementById('filtered-records-container');
+    
+    if (!selectedCategory2) {
+        container.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i>カテゴリ2を選択してください。</div>';
+        filteredRecords = [];
+        return;
+    }
+    
+    // APIでフィルタされたレコードを取得
+    fetch(`/api/records/filter/category2/${encodeURIComponent(selectedCategory2)}`)
+        .then(response => response.json())
+        .then(records => {
+            filteredRecords = records;
+            displayFilteredRecords(records, selectedCategory2);
+        })
+        .catch(error => {
+            console.error('Error filtering records:', error);
+            showMessage('レコードのフィルタ中にエラーが発生しました', 'danger');
+        });
+}
+
+// 追加：フィルタされたレコードを表示する関数
+function displayFilteredRecords(records, category2) {
+    const container = document.getElementById('filtered-records-container');
+    
+    if (records.length === 0) {
+        container.innerHTML = `<div class="alert alert-info"><i class="fas fa-info-circle me-2"></i>カテゴリ2「${category2}」に該当するレコードが見つかりません。</div>`;
+        return;
+    }
+    
+    let html = `<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>カテゴリ2「${category2}」で${records.length}件のレコードが見つかりました。</div>`;
+    
+    html += '<div class="row">';
+    
+    records.forEach(record => {
+        const date = new Date(record.created_at);
+        const formattedDate = date.toLocaleDateString('ja-JP');
+        
+        // 説明文の省略表示（100文字まで）
+        const description = record.description || '';
+        const shortDescription = description.length > 100 
+            ? description.substring(0, 100) + '...' 
+            : description;
+        
+        html += `
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">${record.title}</h6>
+                            <small class="text-muted">ID: ${record.id}</small>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text small">${shortDescription}</p>
+                        <div class="mb-2">
+                            <span class="badge bg-primary me-1">${record.category1 || ''}</span>
+                            <span class="badge bg-info me-1">${record.category2 || ''}</span>
+                            <span class="badge bg-success">${record.category3 || ''}</span>
+                        </div>
+                        <div class="small text-muted mb-2">
+                            作成日: ${formattedDate} | バージョン: ${record.version}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-info" onclick="viewRecord(${record.id})">
+                                <i class="fas fa-eye me-1"></i> 詳細
+                            </button>
+                            <button class="btn btn-warning" onclick="editRecord(${record.id})">
+                                <i class="fas fa-edit me-1"></i> 編集
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteRecord(${record.id})">
+                                <i class="fas fa-trash-alt me-1"></i> 削除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+// 追加：フィルタされたレコードをJSON形式で出力する関数
+function exportFilteredJson() {
+    if (filteredRecords.length === 0) {
+        showMessage('出力するレコードがありません。まずフィルタを実行してください。', 'warning');
+        return;
+    }
+    
+    // JSONデータを整形
+    const jsonData = JSON.stringify(filteredRecords, null, 2);
+    
+    // ダウンロード用のBlob作成
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    // ダウンロードリンクを作成して実行
+    const a = document.createElement('a');
+    a.href = url;
+    
+    // ファイル名を生成（選択されたカテゴリ2と現在の日時）
+    const selectedCategory2 = document.getElementById('category2-filter').value;
+    const now = new Date();
+    const timestamp = now.toISOString().slice(0, 19).replace(/:/g, '-');
+    a.download = `filtered_records_${selectedCategory2}_${timestamp}.json`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // URLを解放
+    URL.revokeObjectURL(url);
+    
+    showMessage(`${filteredRecords.length}件のレコードをJSON形式で出力しました`, 'success');
 }
 
 // レコード操作関数

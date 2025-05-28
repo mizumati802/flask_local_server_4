@@ -196,6 +196,30 @@ def register_routes(app):
             current_app.logger.error(f"Error in api_records_all: {str(e)}")
             return jsonify({'error': str(e)}), 500
 
+    # 追加：API - category2一覧取得
+    @app.route('/api/categories/category2')
+    def api_category2_list():
+        try:
+            db = get_db()
+            categories = db.execute('SELECT DISTINCT category2 FROM user_records WHERE category2 IS NOT NULL AND category2 != "" ORDER BY category2').fetchall()
+            category_list = [row['category2'] for row in categories]
+            return jsonify(category_list)
+        except Exception as e:
+            current_app.logger.error(f"Error in api_category2_list: {str(e)}")
+            return jsonify({'error': str(e)}), 500
+
+    # 追加：API - category2でフィルタしたレコード取得
+    @app.route('/api/records/filter/category2/<category2>')
+    def api_records_by_category2(category2):
+        try:
+            db = get_db()
+            records = db.execute('SELECT * FROM user_records WHERE category2 = ? ORDER BY id DESC', (category2,)).fetchall()
+            records_list = [dict(record) for record in records]
+            return jsonify(records_list)
+        except Exception as e:
+            current_app.logger.error(f"Error in api_records_by_category2: {str(e)}")
+            return jsonify({'error': str(e)}), 500
+
     # 新規レコードの保存
     @app.route('/create', methods=['POST'])
     def create_record():
@@ -435,4 +459,4 @@ def register_routes(app):
 
     # データベースの初期化を実行（appが渡された後）
     with app.app_context():
-        init_db()
+        init_db()   
