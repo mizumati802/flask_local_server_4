@@ -2818,3 +2818,7 @@ ImportError: cannot import name 'register_routes' from 'routes' (/Users/mizumach
  * Restarting with watchdog (fsevents)
  * Debugger is active!
  * Debugger PIN: 777-169-866
+ * Detected change in '/Users/mizumachitakahiro/git_apps/flask_apps/local/flask_local_server_4/app.py', reloading
+ * Restarting with watchdog (fsevents)
+ * Debugger is active!
+ * Debugger PIN: 777-169-866
