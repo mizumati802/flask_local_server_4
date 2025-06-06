@@ -366,35 +366,6 @@ def register_routes(app):
             current_app.logger.error(f"Error in save_icon: {str(e)}")
             return jsonify({'error': str(e)}), 500
 
-    # 追加：アイコンDownloads保存用APIエンドポイント
-    @app.route('/save_icon_download', methods=['POST'])
-    def save_icon_download():
-        """クライアントから送信された画像データをDownloadsフォルダに保存する"""
-        try:
-            data = request.json
-            image_data = data['imageData']
-            filename = data['filename']
-            
-            # Base64データからプレフィックスを除去
-            if 'data:image/' in image_data:
-                image_data = image_data.split(',')[1]
-            
-            # 画像データをデコード
-            img_data = base64.b64decode(image_data)
-            
-            # Downloadsフォルダのパスを取得
-            downloads_dir = '/Users/mizumachitakahiro/Downloads'
-            file_path = os.path.join(downloads_dir, filename)
-            
-            # ファイルに保存
-            with open(file_path, 'wb') as f:
-                f.write(img_data)
-            
-            return jsonify({'success': True, 'file_path': file_path})
-        except Exception as e:
-            current_app.logger.error(f"Error in save_icon_download: {str(e)}")
-            return jsonify({'error': str(e)}), 500
-
     # 追加：画像アップロード用APIエンドポイント
     @app.route('/upload_image', methods=['POST'])
     def upload_image():
@@ -488,4 +459,4 @@ def register_routes(app):
 
     # データベースの初期化を実行（appが渡された後）
     with app.app_context():
-        init_db()
+        init_db()   
